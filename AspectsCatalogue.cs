@@ -19,9 +19,16 @@ namespace Fate {
                 _singleton = new AspectsCatalogue(aspects);
                 return _singleton;
             }
+
+            private set {}
         }
 
-        public Aspect? GetAspect(string name) {
+        public static void ClearInstance() {
+            _singleton = null;
+        }
+
+        public Aspect? GetAspect(string name)
+        {
             if (_loadedAspects.ContainsKey(name)) {
                 return _loadedAspects[name];
             }
@@ -30,7 +37,8 @@ namespace Fate {
             return null;
         }
 
-        public List<Aspect> GetAspects(string[] names) {
+        public List<Aspect> GetAspects(string[] names)
+        {
             if (names == null) {
                 Logger.ERROR("names is null cannot GetAspects");
                 return new();
@@ -43,6 +51,11 @@ namespace Fate {
             .Where(aspect => aspect != null)
             .ToList();
 #pragma warning restore CS8619 // Nulls are filtered out.
+        }
+
+        public void AddAspect(Aspect aspect)
+        {
+            _loadedAspects.Add(aspect.Name, aspect);
         }
 
         private AspectsCatalogue(
