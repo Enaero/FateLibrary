@@ -2,7 +2,7 @@ namespace Fate
 {
     public class Stress
     {
-        public string Name;
+        public string Name {get; private set;}
         public uint Capacity;
         public uint Current;
 
@@ -46,6 +46,27 @@ namespace Fate
             }
             Current -= stressHealed;
             return 0;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Stress otherStress)
+            {
+                return otherStress.Capacity == Capacity &&
+                    otherStress.Current == Current &&
+                    otherStress.Name == Name;
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked {
+                return Name.GetHashCode() + (int) Current + (int) Capacity + base.GetHashCode();
+            }
         }
     }
 }

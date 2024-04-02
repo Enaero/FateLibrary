@@ -1,10 +1,8 @@
 namespace Fate
 {
-    public class Character
+    public class Character : FateEntity
     {
-        public string Name {get; private set;}
         public CharacterSkills Skills;
-        private Dictionary<string, Aspect> _aspects;
         public Stress PhysicalStress;
         public Stress MentalStress;
 
@@ -19,11 +17,10 @@ namespace Fate
             Stress physical,
             Stress mental,
             uint fatePoints = 3,
-            uint refreshPoints = 3) 
+            uint refreshPoints = 3)
+            : base(name, aspects)
         {
-            Name = name;
             Skills = skills;
-            _aspects = aspects.ToDictionary(aspect => aspect.Name, aspect => aspect);
             PhysicalStress = physical;
             MentalStress = mental;
             FatePoints = fatePoints;
