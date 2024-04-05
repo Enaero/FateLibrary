@@ -3,8 +3,8 @@ namespace Fate
     public class Stress
     {
         public string Name {get; private set;}
-        public uint Capacity;
-        public uint Current;
+        public uint Capacity {get; set;}
+        public uint Current {get; set;}
 
         public Stress(string name, uint capacity, uint current = 0)
         {
@@ -64,9 +64,12 @@ namespace Fate
 
         public override int GetHashCode()
         {
-            unchecked {
-                return Name.GetHashCode() + (int) Current + (int) Capacity + base.GetHashCode();
-            }
+            return Name.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return $"({Name}, {Capacity}, {Current})";
         }
     }
 }

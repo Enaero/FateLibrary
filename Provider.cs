@@ -54,6 +54,26 @@ namespace Fate
                 3
             );
         }
+
+        public Zone GetDefaultZone(string name)
+        {
+            return new Zone(name, null, null);
+        }
+
+        public Scene GetDefaultScene(string name)
+        {
+            return new Scene(name, Array.Empty<Aspect>(), null);
+        }
+
+        public SceneIndex GetEmptySceneIndex()
+        {
+            return new SceneIndex();
+        }
+
+        public WorldIndex GetEmptyWorld()
+        {
+            return new WorldIndex();
+        }
     }
 
 }

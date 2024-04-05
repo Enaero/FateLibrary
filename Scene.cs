@@ -2,28 +2,34 @@ namespace Fate
 {
     public class Scene : FateEntity
     {
-        private readonly Dictionary<string, FateEntity> _entities;
+        public List<Zone> Zones {get; set;}
 
-        public Scene(string name, Aspect[] aspects) : base(name, aspects)
+        public Scene(string name, Aspect[] aspects, List<Zone>? zones = null) 
+            : base(name, aspects)
         {
-            _entities = new();
+            Zones = zones is null ? new() : zones.ToList();
         }
 
-        public FateEntity? GetEntity(string name)
+        public override int GetHashCode()
         {
-            if (_entities.TryGetValue(name, out FateEntity? result))
+            return Name.GetHashCode();
+        }
+        public override bool Equals(object? obj)
+        {
+            if (obj is Scene otherScene)
             {
-                return result;
+                if (!base.Equals(otherScene))
+                {
+                    return false;
+                }
+
+                return Zones.Count == otherScene.Zones.Count &&
+                    !Zones.Except(otherScene.Zones).Any();
             }
             else
             {
-                return null;
+                return base.Equals(obj);
             }
-        }
-
-        public bool RemoveEntity(string name)
-        {
-            return _entities.Remove(name);
         }
     }
 }

@@ -2,28 +2,31 @@ namespace Fate {
     public class Aspect {
         public string Name {get; private set;}
 
-        public bool IsLimited;
+        public bool IsLimited {get; set;}
         public uint NumLimitedInvokes {get; private set;}
-        private Dictionary<Character, uint> _freeInvokes {get; set;}
+
+        /// <summary>
+        /// Character Name to Free Invokes count.
+        /// </summary>
+        public Dictionary<string, uint> FreeInvokes {get; set;}
 
         public Aspect(string name, bool isLimited = false, uint numLimitedInvokes = 0) {
             Name = name;
             IsLimited = isLimited;
             NumLimitedInvokes = numLimitedInvokes;
-            _freeInvokes = new();
+            FreeInvokes = new();
         }
 
         public uint GetFreeInvokesFor(Character chara)
         {
-            uint result = 0;
-            _freeInvokes.TryGetValue(chara, out result);
+            FreeInvokes.TryGetValue(chara.Name, out uint result);
 
             return result;
         }
 
         public void AddFreeInvokes(Character character, uint numInvokes) 
         {
-            _freeInvokes.Add(character, numInvokes);
+            FreeInvokes.Add(character.Name, numInvokes);
         }
 
         public void AddLimitedInvokes(uint numInvokesToAdd) 
@@ -47,9 +50,9 @@ namespace Fate {
                 return false;
             }
 
-            if (_freeInvokes.ContainsKey(invoker) && _freeInvokes[invoker] > 0) {
+            if (FreeInvokes.ContainsKey(invoker.Name) && FreeInvokes[invoker.Name] > 0) {
                 // Invoker has a free use of this Aspect
-                _freeInvokes[invoker] -= 1;
+                FreeInvokes[invoker.Name] -= 1;
             }
             else
             {
@@ -77,6 +80,58 @@ namespace Fate {
         public override string ToString()
         {
             return $"Aspect[{Name}]";
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            if (obj is Aspect otherAspect)
+            {
+                if (IsLimited != otherAspect.IsLimited)
+                {
+                    return false;
+                }
+
+                if (Name != otherAspect.Name)
+                {
+                    return false;
+                }
+
+                if (NumLimitedInvokes != otherAspect.NumLimitedInvokes)
+                {
+                    return false;
+                }
+
+                if (FreeInvokes.Count != otherAspect.FreeInvokes.Count)
+                {
+
+                    return false;
+                }
+
+                foreach (var key in FreeInvokes.Keys)
+                {
+                    if (!otherAspect.FreeInvokes.TryGetValue(
+                        key, out uint otherAspectFreeInvokes)) 
+                    {
+                        return false;
+                    }
+                    
+                    if (FreeInvokes[key] != otherAspectFreeInvokes)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                return base.Equals(obj);
+            }
         }
     }
 }
