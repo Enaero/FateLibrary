@@ -4,33 +4,33 @@ using System.Linq;
 
 namespace Fate {
     public class AspectsCatalogue {
-        private static AspectsCatalogue? _singleton = null;
-        private Dictionary<string, Aspect> _loadedAspects;
+        private static AspectsCatalogue? _Singleton = null;
+        private readonly Dictionary<string, Aspect> _LoadedAspects;
 
         public static AspectsCatalogue INSTANCE {
             get {
-                if (_singleton != null) {
-                    return _singleton;
+                if (_Singleton != null) {
+                    return _Singleton;
                 }
 
                 Dictionary<string, Aspect> aspects = new();
                 aspects.Add("Hard as a rock", new Aspect("Hard as a rock"));
 
-                _singleton = new AspectsCatalogue(aspects);
-                return _singleton;
+                _Singleton = new AspectsCatalogue(aspects);
+                return _Singleton;
             }
 
             private set {}
         }
 
         public static void ClearInstance() {
-            _singleton = null;
+            _Singleton = null;
         }
 
         public Aspect? GetAspect(string name)
         {
-            if (_loadedAspects.ContainsKey(name)) {
-                return _loadedAspects[name];
+            if (_LoadedAspects.ContainsKey(name)) {
+                return _LoadedAspects[name];
             }
             
             Logger.ERROR($"Aspect not found or loaded: {name}");
@@ -55,13 +55,13 @@ namespace Fate {
 
         public void AddAspect(Aspect aspect)
         {
-            _loadedAspects.Add(aspect.Name, aspect);
+            _LoadedAspects.Add(aspect.Name, aspect);
         }
 
         private AspectsCatalogue(
             Dictionary<string, Aspect> loadedAspects) 
         {
-            _loadedAspects = loadedAspects;
+            _LoadedAspects = loadedAspects;
         }
     }
 }

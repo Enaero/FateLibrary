@@ -2,26 +2,26 @@ namespace Fate
 {
     public class DieRoller
     {
-        private readonly object _rollLock = new();
+        private readonly object _RollLock = new();
 
-        private readonly Random _random;
-        private readonly int[] _possibleValues;
+        private readonly Random _Random;
+        private readonly int[] _PossibleValues;
 
         public int RolledValue {get; private set;}
 
         public DieRoller(int[] values, Random seed)
         {
-            _random = seed;
-            _possibleValues = values;
+            _Random = seed;
+            _PossibleValues = values;
             Roll();
         }
 
         public DieRoller Roll()
         {
-            lock(_rollLock)
+            lock(_RollLock)
             {
-                int index = _random.Next(_possibleValues.Length);
-                RolledValue = _possibleValues[index];
+                int index = _Random.Next(_PossibleValues.Length);
+                RolledValue = _PossibleValues[index];
                 return this;
             }
         }
@@ -29,12 +29,12 @@ namespace Fate
 
     public class DiceRoller
     {
-        private readonly object _rollLock = new();
-        private readonly DieRoller[] _dice;
+        private readonly object _RollLock = new();
+        private readonly DieRoller[] _Dice;
 
         public DiceRoller(DieRoller[] dice)
         {
-            _dice = dice;
+            _Dice = dice;
         }
 
         /// <summary>
@@ -44,9 +44,9 @@ namespace Fate
         /// <returns>A reference to this FateDiceRoller</returns>
         public DiceRoller Roll()
         {
-            lock(_rollLock)
+            lock(_RollLock)
             {
-                foreach (DieRoller die in _dice)
+                foreach (DieRoller die in _Dice)
                 {
                     die.Roll();
                 }
@@ -57,17 +57,17 @@ namespace Fate
 
         public int GetTotal() 
         {
-            lock(_rollLock)
+            lock(_RollLock)
             {
-                return _dice.Select(die => die.RolledValue).Sum();
+                return _Dice.Select(die => die.RolledValue).Sum();
             }
         }
 
         public DieRoller[] GetDice()
         {
-            lock(_rollLock)
+            lock(_RollLock)
             {
-                return _dice;
+                return _Dice;
             }
         }
     }

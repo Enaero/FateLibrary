@@ -11,20 +11,20 @@ namespace Fate {
         public string Name {get; private set;}
         public Aspect[] Aspects {
             get {
-                return _aspects.Values.ToArray();
+                return _Aspects.Values.ToArray();
             }
             private set {}
         }
-        protected Dictionary<string, Aspect> _aspects;
+        protected Dictionary<string, Aspect> _Aspects;
 
         public FateEntity(string name, Aspect[] aspects) {
             Name = name;
-            _aspects = aspects.ToDictionary(aspect => aspect.Name, aspect => aspect);
+            _Aspects = aspects.ToDictionary(aspect => aspect.Name, aspect => aspect);
         }
 
         public Aspect? GetAspect(string name)
         {
-            _aspects.TryGetValue(name, out Aspect? result);
+            _Aspects.TryGetValue(name, out Aspect? result);
             return result;
         }
 
@@ -37,7 +37,7 @@ namespace Fate {
         {
             foreach(Aspect aspect in aspects)
             {
-                _aspects[aspect.Name] = aspect;
+                _Aspects[aspect.Name] = aspect;
             }
         }
 

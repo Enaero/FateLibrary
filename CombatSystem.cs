@@ -27,11 +27,11 @@ namespace Fate
 
     public class AttackBuilder : IAttackBuilder
     {
-        private Skill? _attackingSkill;
-        private Skill? _defendingSkill;
-        private Stress? _defenderStress;
+        private Skill? _AttackingSkill;
+        private Skill? _DefendingSkill;
+        private Stress? _DefenderStress;
 
-        private DiceRoller? _diceRoller;
+        private DiceRoller? _DiceRoller;
 
         public AttackBuilder()
         {
@@ -46,50 +46,50 @@ namespace Fate
                return 0;
             }
 
-            int attackDiceTotal = _diceRoller!.Roll().GetTotal();
-            int attackTotal = _attackingSkill!.Value + attackDiceTotal;
+            int attackDiceTotal = _DiceRoller!.Roll().GetTotal();
+            int attackTotal = _AttackingSkill!.Value + attackDiceTotal;
 
-            int defenseDiceTotal = _diceRoller!.Roll().GetTotal();
-            int defenseTotal = defenseDiceTotal + _defendingSkill!.Value;
+            int defenseDiceTotal = _DiceRoller!.Roll().GetTotal();
+            int defenseTotal = defenseDiceTotal + _DefendingSkill!.Value;
 
             int shifts = attackTotal - defenseTotal;
 
             if (shifts > 0)
             {
-                return (int)_defenderStress!.TakeStress((uint) shifts);
+                return (int)_DefenderStress!.TakeStress((uint) shifts);
             }
             return 0;
         }
 
         public bool CanAttack()
         {
-            return _attackingSkill is not null &&
-                _defendingSkill is not null &&
-                _defenderStress is not null &&
-                _diceRoller is not null;
+            return _AttackingSkill is not null &&
+                _DefendingSkill is not null &&
+                _DefenderStress is not null &&
+                _DiceRoller is not null;
         }
 
         public IAttackBuilder WithAttackerSkill(Skill skill)
         {
-            _attackingSkill = skill;
+            _AttackingSkill = skill;
             return this;
         }
 
         public IAttackBuilder WithDefenderSkill(Skill skill)
         {
-            _defendingSkill = skill;
+            _DefendingSkill = skill;
             return this;
         }
 
         public IAttackBuilder WithDefenderStress(Stress stress)
         {
-            _defenderStress = stress;
+            _DefenderStress = stress;
             return this;
         }
 
         public IAttackBuilder WithDiceRoller(DiceRoller diceRoller)
         {
-            _diceRoller = diceRoller;
+            _DiceRoller = diceRoller;
             return this;
         }
     }
