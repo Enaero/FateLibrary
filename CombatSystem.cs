@@ -7,9 +7,9 @@ namespace Fate
     /// </summary>
     public class CombatSystem
     {
-        private readonly DiceRoller _DiceRoller;
+        private readonly IDiceRoller _DiceRoller;
 
-        public CombatSystem(DiceRoller diceRoller)
+        public CombatSystem(IDiceRoller diceRoller)
         {
             _DiceRoller = diceRoller;
         }
@@ -39,8 +39,8 @@ namespace Fate
             }
             int defendingSkillValue = defendingSkill is null ? 0 : defendingSkill.Value;
 
-            int defenseRoll = _DiceRoller.Roll().GetTotal();
             int attackRoll = _DiceRoller.Roll().GetTotal();
+            int defenseRoll = _DiceRoller.Roll().GetTotal();
 
             int attackValue = attackRoll + attackingSkillValue;
             int defenseValue = defenseRoll + defendingSkillValue;

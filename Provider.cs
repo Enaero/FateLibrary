@@ -3,6 +3,8 @@ namespace Fate
 {
     public class DependencyProvider
     {
+        private const int DEFAULT_SEED_VAL = -1;
+
         public DependencyProvider()
         {
             // no-op
@@ -12,11 +14,17 @@ namespace Fate
         /// Gets a 4dF DiceRoller. Rolles 4 Fate dice,
         /// with each Fate die rolling a -1, 0, or 1.
         /// </summary>
+        /// <param name="seed">The seed to use for the RNG. 
+        /// Keep as default to use system time.</param>
         /// <returns>Fate Dice Roller</returns>
-        public DiceRoller GetFateDice()
+        public IDiceRoller GetFateDice(int seed = DEFAULT_SEED_VAL)
         {
+            if (seed == DEFAULT_SEED_VAL)
+            {
+                seed = (int) System.DateTime.Now.Ticks;
+            }
+
             int[] possibleValues = new[] {-1, 0, 1};
-            int seed = (int) System.DateTime.Now.Ticks;
 
             DieRoller[] dice = new DieRoller[4] {
                 new(possibleValues, new Random(seed)),
@@ -102,6 +110,15 @@ namespace Fate
         public WorldIndex GetEmptyWorld()
         {
             return new WorldIndex();
+        }
+
+        public CombatSystem GetCombatSystem(int seed = DEFAULT_SEED_VAL)
+        {
+            if (seed == DEFAULT_SEED_VAL)
+            {
+                seed = (int) DateTime.Now.Ticks;
+            }
+            return new CombatSystem(GetFateDice(seed));
         }
     }
 

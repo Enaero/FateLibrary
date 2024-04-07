@@ -1,6 +1,11 @@
 namespace Fate
 {
-    public class DieRoller
+    public interface IDieRoller
+    {
+        IDieRoller Roll();
+    }
+
+    public class DieRoller : IDieRoller
     {
         private readonly object _RollLock = new();
 
@@ -16,7 +21,7 @@ namespace Fate
             Roll();
         }
 
-        public DieRoller Roll()
+        public IDieRoller Roll()
         {
             lock(_RollLock)
             {
@@ -27,7 +32,14 @@ namespace Fate
         }
     }
 
-    public class DiceRoller
+    public interface IDiceRoller
+    {
+        IDiceRoller Roll();
+        int GetTotal();
+        DieRoller[] GetDice();
+    }
+
+    public class DiceRoller : IDiceRoller
     {
         private readonly object _RollLock = new();
         private readonly DieRoller[] _Dice;
@@ -42,7 +54,7 @@ namespace Fate
         /// Example: diceRoller.Roll().GetTotal();
         /// </summary>
         /// <returns>A reference to this FateDiceRoller</returns>
-        public DiceRoller Roll()
+        public IDiceRoller Roll()
         {
             lock(_RollLock)
             {
