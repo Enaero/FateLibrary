@@ -15,7 +15,7 @@ namespace Fate
 
         /// <summary>
         /// Takes stress and returns any extra shifts that need
-        /// to be handles via consequences or something else.
+        /// to be handled via consequences or something else.
         /// </summary>
         /// <param name="stressTaken">The number of shifts taken.</param>
         /// <returns>The remaining number of shifts after taking stress.</returns>

@@ -32,9 +32,30 @@ namespace Fate
         /// Default skills is defined as 0 for every skill.
         /// </summary>
         /// <returns>Skills at 0 each.</returns>
-        public CharacterSkills GetDefaultSkills()
+        public Dictionary<string, Skill> GetDefaultSkills()
         {
-            return new CharacterSkills();
+            return new Dictionary<string, Skill>()
+            {
+                { CharacterSkills.ATHLETICS, new Skill(CharacterSkills.ATHLETICS, 0) },
+                { CharacterSkills.ACADEMICS, new Skill(CharacterSkills.ACADEMICS, 0) },
+                { CharacterSkills.BURGLARY, new Skill(CharacterSkills.BURGLARY, 0) },
+                { CharacterSkills.CONTACTS, new Skill(CharacterSkills.CONTACTS, 0) },
+                { CharacterSkills.CRAFTS, new Skill(CharacterSkills.CRAFTS, 0) },
+                { CharacterSkills.DECEIVE, new Skill(CharacterSkills.DECEIVE, 0) },
+                { CharacterSkills.DRIVE, new Skill(CharacterSkills.DRIVE, 0) },
+                { CharacterSkills.EMPATHY, new Skill(CharacterSkills.EMPATHY, 0) },
+                { CharacterSkills.FIGHT, new Skill(CharacterSkills.FIGHT, 0) },
+                { CharacterSkills.INVESTIGATE, new Skill(CharacterSkills.INVESTIGATE, 0) },
+                { CharacterSkills.LORE, new Skill(CharacterSkills.LORE, 0) },
+                { CharacterSkills.NOTICE, new Skill(CharacterSkills.NOTICE, 0) },
+                { CharacterSkills.PHYSIQUE, new Skill(CharacterSkills.PHYSIQUE, 0) },
+                { CharacterSkills.PROVOKE, new Skill(CharacterSkills.PROVOKE, 0) },
+                { CharacterSkills.RAPPORT, new Skill(CharacterSkills.RAPPORT, 0) },
+                { CharacterSkills.RESOURCES, new Skill(CharacterSkills.RESOURCES, 0) },
+                { CharacterSkills.SHOOT, new Skill(CharacterSkills.SHOOT, 0) },
+                { CharacterSkills.STEALTH, new Skill(CharacterSkills.STEALTH, 0) },
+                { CharacterSkills.WILL, new Skill(CharacterSkills.WILL, 0) }
+            };
         }
 
         public Stress GetDefaultStress(string name)
@@ -50,6 +71,14 @@ namespace Fate
                 Array.Empty<Aspect>(),
                 GetDefaultStress("Physical"),
                 GetDefaultStress("Mental"),
+                new string[] {
+                    CommonActions.BASIC_ATTACK.Name
+                }.ToList(),
+                new string[] {
+                    CommonActions.BLOCK.Name,
+                     CommonActions.DODGE.Name,
+                      CommonActions.BRACE.Name
+                }.ToList(),
                 3,
                 3
             );

@@ -2,95 +2,60 @@ using System.Diagnostics;
 
 namespace Fate
 {
-    public interface IAttackBuilder
+    /// <summary>
+    /// Stateless system that performs combat operations on Fate data types.
+    /// </summary>
+    public class CombatSystem
     {
-        /// <summary>
-        /// Does the builder have everything it needs to construct an attack.
-        /// </summary>
-        /// <returns></returns>
-        public bool CanAttack();
-        public IAttackBuilder WithAttackerSkill(Skill skill);
-        public IAttackBuilder WithDefenderSkill(Skill skill);
-        public IAttackBuilder WithDefenderStress(Stress stress);
-        public IAttackBuilder WithDiceRoller(DiceRoller diceRoller);
+        private readonly DiceRoller _DiceRoller;
 
-        /// <summary>
-        /// Performs the attack. If CanAttack() returns false, will no-op 
-        /// and log an error.
-        /// </summary>
-        /// <returns>The number of shits that could not be handled 
-        /// by the defender's stress. A positive value probably means
-        /// a consequence should be taken.
-        /// </returns>
-        public int Attack();
-    }
-
-    public class AttackBuilder : IAttackBuilder
-    {
-        private Skill? _AttackingSkill;
-        private Skill? _DefendingSkill;
-        private Stress? _DefenderStress;
-
-        private DiceRoller? _DiceRoller;
-
-        public AttackBuilder()
-        {
-        }
-
-        public int Attack()
-        {
-            if (!CanAttack())
-            {
-               StackTrace stackTrace = new StackTrace(true);
-               Logger.ERROR("Attack was called when it is not ready.\n" + stackTrace.ToString());
-               return 0;
-            }
-
-            int attackDiceTotal = _DiceRoller!.Roll().GetTotal();
-            int attackTotal = _AttackingSkill!.Value + attackDiceTotal;
-
-            int defenseDiceTotal = _DiceRoller!.Roll().GetTotal();
-            int defenseTotal = defenseDiceTotal + _DefendingSkill!.Value;
-
-            int shifts = attackTotal - defenseTotal;
-
-            if (shifts > 0)
-            {
-                return (int)_DefenderStress!.TakeStress((uint) shifts);
-            }
-            return 0;
-        }
-
-        public bool CanAttack()
-        {
-            return _AttackingSkill is not null &&
-                _DefendingSkill is not null &&
-                _DefenderStress is not null &&
-                _DiceRoller is not null;
-        }
-
-        public IAttackBuilder WithAttackerSkill(Skill skill)
-        {
-            _AttackingSkill = skill;
-            return this;
-        }
-
-        public IAttackBuilder WithDefenderSkill(Skill skill)
-        {
-            _DefendingSkill = skill;
-            return this;
-        }
-
-        public IAttackBuilder WithDefenderStress(Stress stress)
-        {
-            _DefenderStress = stress;
-            return this;
-        }
-
-        public IAttackBuilder WithDiceRoller(DiceRoller diceRoller)
+        public CombatSystem(DiceRoller diceRoller)
         {
             _DiceRoller = diceRoller;
-            return this;
+        }
+
+        /// <summary>
+        /// Performs the attack by attacker on to defender, 
+        /// modifying defender stress if necessary. Returns
+        /// any remaining damage that the character was unable
+        /// to absorb by stress.
+        /// </summary>
+        /// <param name="attacker">The attacking character.</param>
+        /// <param name="attackInfo">The attack's information.</param>
+        /// <param name="defender">The defending character.</param>
+        /// <param name="defenseInfo">The chosen defense's information</param>
+        /// <returns></returns>
+        public int Attack(Character attacker, AttackInfo attackInfo, Character defender, DefenseInfo defenseInfo)
+        {
+            if (!attacker.Skills.TryGetValue(attackInfo.SkillUsed, out Skill? attackingSkill))
+            {
+                Logger.ERROR($"[Attack] {attackInfo.SkillUsed} not found in character skills. Assuming 0.");
+            }
+            int attackingSkillValue = attackingSkill is null ? 0 : attackingSkill.Value;
+
+            if (!defender.Skills.TryGetValue(defenseInfo.SkillUsed, out Skill? defendingSkill))
+            {
+                Logger.ERROR($"[Defense] {defenseInfo.SkillUsed} not found in character skills. Assuming 0.");
+            }
+            int defendingSkillValue = defendingSkill is null ? 0 : defendingSkill.Value;
+
+            int defenseRoll = _DiceRoller.Roll().GetTotal();
+            int attackRoll = _DiceRoller.Roll().GetTotal();
+
+            int attackValue = attackRoll + attackingSkillValue;
+            int defenseValue = defenseRoll + defendingSkillValue;
+
+            int shiftsOfDamage = attackValue - defenseValue;
+
+            if (shiftsOfDamage > 0)
+            {
+                Stress targetStress = defender.GetStress(attackInfo.TargetStressName);
+                // The damage that could not be absorbed by the target stress.
+                return (int) targetStress.TakeStress((uint) shiftsOfDamage);
+            }
+            else {
+                return 0;
+            }
         }
     }
 }
