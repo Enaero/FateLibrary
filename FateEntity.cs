@@ -9,6 +9,14 @@ namespace Fate {
         /// name they might be treated as the same entity.
         /// </summary>
         public string Name {get; private set;}
+
+        public string DisplayName {
+            get {
+                return Name;
+            }
+            private set {}
+        }
+
         public Aspect[] Aspects {
             get {
                 return _Aspects.Values.ToArray();

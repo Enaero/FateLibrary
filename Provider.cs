@@ -84,8 +84,8 @@ namespace Fate
                 }.ToList(),
                 new string[] {
                     CommonActions.BLOCK.Name,
-                     CommonActions.DODGE.Name,
-                      CommonActions.BRACE.Name
+                    CommonActions.DODGE.Name,
+                    CommonActions.BRACE.Name
                 }.ToList(),
                 3,
                 3
@@ -110,6 +110,11 @@ namespace Fate
         public WorldIndex GetEmptyWorld()
         {
             return new WorldIndex();
+        }
+
+        public ActionIndex GetEmptyCombatIndex()
+        {
+            return new ActionIndex(new(), new());
         }
 
         public CombatSystem GetCombatSystem(int seed = DEFAULT_SEED_VAL)

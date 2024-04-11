@@ -4,14 +4,14 @@ namespace Fate
     {
         public string Name {get; set;}
         public string SkillUsed {get; set;}
-        public HashSet<string> ValidDefenseNames {get; set;}
+        public ICollection<string> ValidDefenseNames {get; set;}
         public string TargetStressName {get; set;}
 
-        public AttackInfo(string name, string skillName, string targetStressName, IEnumerable<string> defenseNames)
+        public AttackInfo(string name, string skillUsed, string targetStressName, ICollection<string> validDefenseNames)
         {
             Name = name;
-            SkillUsed = skillName;
-            ValidDefenseNames = new(defenseNames);
+            SkillUsed = skillUsed;
+            ValidDefenseNames = new HashSet<string>(validDefenseNames);
             TargetStressName = targetStressName;
         }
 
