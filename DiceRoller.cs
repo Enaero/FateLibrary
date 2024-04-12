@@ -30,6 +30,11 @@ namespace Fate
                 return this;
             }
         }
+
+        public override string ToString()
+        {
+            return $"df[{RolledValue}]";
+        }
     }
 
     public interface IDiceRoller
@@ -61,8 +66,8 @@ namespace Fate
                 foreach (DieRoller die in _Dice)
                 {
                     die.Roll();
-                }
 
+                }
                 return this;
             }
         }

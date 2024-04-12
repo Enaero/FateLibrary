@@ -25,12 +25,14 @@ namespace Fate
             }
 
             int[] possibleValues = new[] {-1, 0, 1};
+            Random rng = new(seed);
+
 
             DieRoller[] dice = new DieRoller[4] {
-                new(possibleValues, new Random(seed)),
-                new(possibleValues, new Random(seed + 1)),
-                new(possibleValues, new Random(seed + 2)),
-                new(possibleValues, new Random(seed + 3)),
+                new(possibleValues, rng),
+                new(possibleValues, rng),
+                new(possibleValues, rng),
+                new(possibleValues, rng),
             };
 
             return new DiceRoller(dice);

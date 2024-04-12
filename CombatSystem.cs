@@ -45,15 +45,19 @@ namespace Fate
             int attackValue = attackRoll + attackingSkillValue;
             int defenseValue = defenseRoll + defendingSkillValue;
 
+            Logger.INFO($"Attack rolled: {attackRoll} with skill {attackingSkillValue}");
+            Logger.INFO($"Defense rolled {defenseRoll} with skill {defendingSkillValue}");
             int shiftsOfDamage = attackValue - defenseValue;
 
             if (shiftsOfDamage > 0)
             {
+                Logger.INFO($"{defender.Name} is taking {shiftsOfDamage} shifts of damage");
                 Stress targetStress = defender.GetStress(attackInfo.TargetStressName);
                 // The damage that could not be absorbed by the target stress.
                 return (int) targetStress.TakeStress((uint) shiftsOfDamage);
             }
             else {
+                Logger.INFO($"{defender.Name} succesfully avoided damage");
                 return 0;
             }
         }
